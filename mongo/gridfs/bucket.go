@@ -17,7 +17,6 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/bsontype"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -347,14 +346,7 @@ func (b *Bucket) openDownloadStream(filter interface{}, opts ...*options.FindOpt
 		return nil, err
 	}
 
-	var fileLen int64
-	switch fileLenElem.Type {
-	case bsontype.Int32:
-		fileLen = int64(fileLenElem.Int32())
-	default:
-		fileLen = fileLenElem.Int64()
-	}
-	
+	fileLen := fileLenElem.Int64()
 	if fileLen == 0 {
 		return newDownloadStream(nil, b.chunkSize, 0), nil
 	}
